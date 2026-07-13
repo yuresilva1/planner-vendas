@@ -11,6 +11,7 @@ function App() {
   const [showCpfModal, setShowCpfModal] = useState(false);
   const [toast, setToast] = useState(null);
   const [realtimeNotifications, setRealtimeNotifications] = useState([]);
+  const [expandedProductId, setExpandedProductId] = useState(null);
 
   useEffect(() => {
     const pusherKey = import.meta.env.VITE_PUSHER_KEY || "SUA_KEY";
@@ -62,6 +63,8 @@ function App() {
               <ProductCard 
                 key={product.id} 
                 product={product} 
+                isExpanded={expandedProductId === product.id}
+                onToggle={() => setExpandedProductId(prev => prev === product.id ? null : product.id)}
                 onCopy={showToast} 
               />
             ))}

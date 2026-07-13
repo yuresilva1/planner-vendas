@@ -1,8 +1,6 @@
-import { useState } from 'react';
 import { Copy, ChevronDown, ChevronUp, Link as LinkIcon, DollarSign } from 'lucide-react';
 
-export default function ProductCard({ product, onCopy }) {
-  const [showInstallments, setShowInstallments] = useState(false);
+export default function ProductCard({ product, isExpanded, onToggle, onCopy }) {
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(product.link);
@@ -29,13 +27,13 @@ export default function ProductCard({ product, onCopy }) {
 
       <button 
         className="installments-btn" 
-        onClick={() => setShowInstallments(!showInstallments)}
+        onClick={onToggle}
       >
-        {showInstallments ? 'Ocultar Parcelas' : 'Ver Parcelas'}
-        {showInstallments ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        {isExpanded ? 'Ocultar Parcelas' : 'Ver Parcelas'}
+        {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
       </button>
 
-      {showInstallments && (
+      {isExpanded && (
         <div className="installments-table-container">
           <table className="installments-table">
             <thead>
