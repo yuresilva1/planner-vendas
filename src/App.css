@@ -459,6 +459,24 @@
   white-space: nowrap;
 }
 
+.lead-notes {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 0.5rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.85rem;
+  min-height: 60px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.lead-notes:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+}
+
 .lead-controls {
   display: flex;
   align-items: center;
