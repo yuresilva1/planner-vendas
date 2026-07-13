@@ -124,13 +124,6 @@ function App() {
           <h2 className="section-title">
             Arquivos Úteis
           </h2>
-          {leads.length > 0 && (
-            <LeadQueue 
-              leads={leads} 
-              setLeads={setLeads} 
-              onCopy={showToast} 
-            />
-          )}
           <ImageUploader 
             title="Finalização de Vendas" 
             storageKey="sales_images"
@@ -143,6 +136,14 @@ function App() {
           />
         </section>
       </main>
+
+      {leads.length > 0 && (
+        <LeadQueue 
+          leads={leads} 
+          setLeads={setLeads} 
+          onCopy={showToast} 
+        />
+      )}
 
       {showCpfModal && (
         <CpfGenerator 
