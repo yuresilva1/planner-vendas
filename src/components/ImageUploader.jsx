@@ -1,49 +1,73 @@
 import { useState, useRef, useEffect } from 'react';
-import { Upload, Copy, Image as ImageIcon, Trash2 } from 'lucide-react';
-import { get, set } from 'idb-keyval';
+import { Upload, Copy, Image as ImageIcon, Trash2, Loader2 } from 'lucide-react';
 
 export default function ImageUploader({ title, storageKey, onCopy }) {
   const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
 
-  // Load from IndexedDB using idb-keyval
-  useEffect(() => {
-    get(storageKey).then((saved) => {
-      if (saved) {
-        setImages(saved);
-      }
-    });
-  }, [storageKey]);
-
-  const saveImages = async (newImages) => {
-    setImages(newImages);
+  // Load from Vercel Blob via API
+  const loadImages = async () => {
+    setIsLoading(true);
     try {
-      await set(storageKey, newImages);
-    } catch (e) {
-      console.error("Erro ao salvar no IndexedDB", e);
-      onCopy("Erro ao armazenar imagem: sem espaço suficiente.");
+      const res = await fetch(`/api/images/list?prefix=${storageKey}`);
+      const data = await res.json();
+      if (data.success && data.blobs) {
+        setImages(data.blobs);
+      }
+    } catch (err) {
+      console.error("Erro ao listar imagens da nuvem:", err);
+    } finally {
+      setIsLoading(false);
     }
   };
 
-  const handleUpload = (e) => {
+  useEffect(() => {
+    loadImages();
+  }, [storageKey]);
+
+  const handleUpload = async (e) => {
     const files = Array.from(e.target.files);
+    if (files.length === 0) return;
     
-    files.forEach(file => {
+    setIsUploading(true);
+
+    for (const file of files) {
       const reader = new FileReader();
-      reader.onload = (event) => {
-        setImages(prev => {
-          const updated = [...prev, { id: Date.now() + Math.random(), data: event.target.result }];
-          saveImages(updated);
-          return updated;
-        });
+      reader.onload = async (event) => {
+        const base64Data = event.target.result;
+        
+        try {
+          const res = await fetch('/api/images/upload', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              base64Data,
+              filename: file.name,
+              prefix: storageKey
+            })
+          });
+          
+          const data = await res.json();
+          if (data.success) {
+            setImages(prev => [data.blob, ...prev]);
+            onCopy("Imagem salva na nuvem com sucesso!");
+          }
+        } catch (err) {
+          console.error("Upload error:", err);
+          onCopy("Erro ao enviar imagem para a nuvem.");
+        }
       };
       reader.readAsDataURL(file);
-    });
+    }
+    
+    setIsUploading(false);
   };
 
-  const handleCopyImage = async (dataUrl) => {
+  const handleCopyImage = async (imgUrl) => {
     try {
-      const res = await fetch(dataUrl);
+      const res = await fetch(imgUrl);
       const blob = await res.blob();
       await navigator.clipboard.write([
         new ClipboardItem({
@@ -53,13 +77,27 @@ export default function ImageUploader({ title, storageKey, onCopy }) {
       onCopy("Imagem copiada para a área de transferência!");
     } catch (err) {
       console.error(err);
-      onCopy("Erro ao copiar imagem. Verifique permissões.");
+      onCopy("Erro ao copiar imagem. Verifique as permissões do navegador.");
     }
   };
 
-  const handleDelete = (id) => {
-    const filtered = images.filter(img => img.id !== id);
-    saveImages(filtered);
+  const handleDelete = async (url) => {
+    try {
+      const res = await fetch('/api/images/delete', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ url })
+      });
+      
+      const data = await res.json();
+      if (data.success) {
+        setImages(prev => prev.filter(img => img.url !== url));
+        onCopy("Imagem excluída da nuvem!");
+      }
+    } catch (err) {
+      console.error(err);
+      onCopy("Erro ao excluir imagem.");
+    }
   };
 
   return (
@@ -67,8 +105,9 @@ export default function ImageUploader({ title, storageKey, onCopy }) {
       <div className="folder-header">
         <h3><ImageIcon size={20} className="text-accent" /> {title}</h3>
         <div className="upload-btn">
-          <button className="btn-secondary">
-            <Upload size={16} /> Upload
+          <button className="btn-secondary" disabled={isUploading}>
+            {isUploading ? <Loader2 size={16} className="spin" /> : <Upload size={16} />} 
+            {isUploading ? 'Enviando...' : 'Upload'}
           </button>
           <input 
             type="file" 
@@ -76,19 +115,27 @@ export default function ImageUploader({ title, storageKey, onCopy }) {
             multiple 
             accept="image/*"
             onChange={handleUpload}
+            disabled={isUploading}
           />
         </div>
       </div>
 
       <div className="images-grid">
-        {images.map(img => (
-          <div key={img.id} className="image-item group">
-            <img src={img.data} alt="Upload" />
+        {isLoading && (
+          <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
+            <Loader2 size={24} className="spin" style={{ margin: '0 auto 1rem' }} />
+            Carregando imagens da nuvem...
+          </div>
+        )}
+        
+        {!isLoading && images.map(img => (
+          <div key={img.url} className="image-item group">
+            <img src={img.url} alt="Upload" />
             <div className="image-overlay">
               <button 
                 className="btn-primary" 
                 style={{ padding: '0.4rem', borderRadius: '50%' }}
-                onClick={() => handleCopyImage(img.data)}
+                onClick={() => handleCopyImage(img.url)}
                 title="Copiar Imagem"
               >
                 <Copy size={16} />
@@ -96,15 +143,16 @@ export default function ImageUploader({ title, storageKey, onCopy }) {
               <button 
                 className="btn-icon" 
                 style={{ color: '#ef4444', background: 'rgba(0,0,0,0.5)' }}
-                onClick={() => handleDelete(img.id)}
-                title="Deletar"
+                onClick={() => handleDelete(img.url)}
+                title="Deletar da Nuvem"
               >
                 <Trash2 size={16} />
               </button>
             </div>
           </div>
         ))}
-        {images.length === 0 && (
+        
+        {!isLoading && images.length === 0 && (
           <div style={{ gridColumn: '1 / -1', textAlign: 'center', padding: '2rem', color: 'var(--text-secondary)' }}>
             Nenhuma imagem enviada ainda.
           </div>
