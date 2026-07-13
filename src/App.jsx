@@ -4,11 +4,39 @@ import { products } from './data/products';
 import ProductCard from './components/ProductCard';
 import ImageUploader from './components/ImageUploader';
 import CpfGenerator from './components/CpfGenerator';
-import { Target, Fingerprint, Info } from 'lucide-react';
+import { Target, Fingerprint, Info, Bell } from 'lucide-react';
+import Pusher from 'pusher-js';
 
 function App() {
   const [showCpfModal, setShowCpfModal] = useState(false);
   const [toast, setToast] = useState(null);
+  const [realtimeNotifications, setRealtimeNotifications] = useState([]);
+
+  useEffect(() => {
+    const pusherKey = import.meta.env.VITE_PUSHER_KEY || "SUA_KEY";
+    const pusherCluster = import.meta.env.VITE_PUSHER_CLUSTER || "us2";
+
+    if (pusherKey === "SUA_KEY") return; // Ignora se não estiver configurado
+
+    const pusher = new Pusher(pusherKey, {
+      cluster: pusherCluster
+    });
+
+    const channel = pusher.subscribe('sales-planner');
+    channel.bind('webhook-event', function(data) {
+      const id = Date.now();
+      setRealtimeNotifications(prev => [...prev, { id, message: data.message }]);
+      
+      setTimeout(() => {
+        setRealtimeNotifications(prev => prev.filter(n => n.id !== id));
+      }, 4000);
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, []);
 
   const showToast = (message) => {
     setToast(message);
@@ -73,6 +101,15 @@ function App() {
           {toast}
         </div>
       )}
+
+      <div className="realtime-toast-container">
+        {realtimeNotifications.map(n => (
+          <div key={n.id} className="realtime-toast">
+            <Bell size={18} color="#10b981" />
+            <span>{n.message}</span>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
