@@ -3,6 +3,7 @@ import './App.css';
 import { products } from './data/products';
 import ProductCard from './components/ProductCard';
 import ImageUploader from './components/ImageUploader';
+import LeadQueue from './components/LeadQueue';
 import CpfGenerator from './components/CpfGenerator';
 import { Target, Fingerprint, Info, Bell, Trash2, Copy } from 'lucide-react';
 import Pusher from 'pusher-js';
@@ -12,6 +13,38 @@ function App() {
   const [toast, setToast] = useState(null);
   const [realtimeNotifications, setRealtimeNotifications] = useState([]);
   const [expandedProductId, setExpandedProductId] = useState(null);
+  const [leads, setLeads] = useState(() => {
+    const saved = localStorage.getItem('sales_leads');
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  useEffect(() => {
+    localStorage.setItem('sales_leads', JSON.stringify(leads));
+  }, [leads]);
+
+  const playNotificationSound = () => {
+    try {
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      const oscillator = audioCtx.createOscillator();
+      const gainNode = audioCtx.createGain();
+      
+      oscillator.type = 'sine';
+      oscillator.frequency.setValueAtTime(880, audioCtx.currentTime); // A5
+      oscillator.frequency.exponentialRampToValueAtTime(440, audioCtx.currentTime + 0.5); // A4
+      
+      gainNode.gain.setValueAtTime(0, audioCtx.currentTime);
+      gainNode.gain.linearRampToValueAtTime(0.5, audioCtx.currentTime + 0.05);
+      gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.5);
+      
+      oscillator.connect(gainNode);
+      gainNode.connect(audioCtx.destination);
+      
+      oscillator.start(audioCtx.currentTime);
+      oscillator.stop(audioCtx.currentTime + 0.5);
+    } catch (e) {
+      console.error("Erro ao tocar som:", e);
+    }
+  };
 
   useEffect(() => {
     const pusherKey = import.meta.env.VITE_PUSHER_KEY || "SUA_KEY";
@@ -25,9 +58,24 @@ function App() {
 
     const channel = pusher.subscribe('sales-planner');
     channel.bind('webhook-event', function(data) {
-      const id = Date.now();
-      setRealtimeNotifications(prev => [...prev, { id, message: data.message, phone: data.phone }]);
-      // A notificação agora é persistente (não some sozinha)
+      console.log("Recebeu evento do Pusher:", data);
+      const notifId = Date.now();
+      
+      setRealtimeNotifications(prev => [...prev, { id: notifId, ...data }]);
+      playNotificationSound();
+      
+      setLeads(prev => [{ 
+        id: notifId, 
+        message: data.message, 
+        phone: data.phone,
+        timestamp: new Date().toISOString(), 
+        status: 'PENDING' 
+      }, ...prev]);
+
+      // Remove the toast after 5 seconds
+      setTimeout(() => {
+        setRealtimeNotifications(prev => prev.filter(n => n.id !== notifId));
+      }, 5000);
     });
 
     return () => {
@@ -76,6 +124,13 @@ function App() {
           <h2 className="section-title">
             Arquivos Úteis
           </h2>
+          {leads.length > 0 && (
+            <LeadQueue 
+              leads={leads} 
+              setLeads={setLeads} 
+              onCopy={showToast} 
+            />
+          )}
           <ImageUploader 
             title="Finalização de Vendas" 
             storageKey="sales_images"
