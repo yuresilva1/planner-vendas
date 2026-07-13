@@ -67,17 +67,43 @@ export default function ImageUploader({ title, storageKey, onCopy }) {
 
   const handleCopyImage = async (imgUrl) => {
     try {
-      const res = await fetch(imgUrl);
-      const blob = await res.blob();
-      await navigator.clipboard.write([
-        new ClipboardItem({
-          [blob.type]: blob
-        })
-      ]);
-      onCopy("Imagem copiada para a área de transferência!");
+      // Navegadores só aceitam copiar 'image/png' para a área de transferência.
+      // Precisamos converter a imagem do Vercel Blob (que pode ser JPG, WEBP) para PNG via Canvas.
+      const img = new Image();
+      img.crossOrigin = 'Anonymous'; // Evita erro de CORS ao desenhar no Canvas
+      img.src = imgUrl;
+      
+      await new Promise((resolve, reject) => {
+        img.onload = resolve;
+        img.onerror = reject;
+      });
+
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width;
+      canvas.height = img.height;
+      
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0);
+      
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          onCopy("Erro: Falha ao converter imagem.");
+          return;
+        }
+        try {
+          await navigator.clipboard.write([
+            new ClipboardItem({ 'image/png': blob })
+          ]);
+          onCopy("Imagem copiada para a área de transferência!");
+        } catch (e) {
+          console.error("Clipboard write error:", e);
+          onCopy("Erro de permissão no navegador ao colar.");
+        }
+      }, 'image/png');
+      
     } catch (err) {
-      console.error(err);
-      onCopy("Erro ao copiar imagem. Verifique as permissões do navegador.");
+      console.error("Image loading error:", err);
+      onCopy("Erro ao baixar a imagem para copiar.");
     }
   };
 
