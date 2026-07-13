@@ -103,7 +103,7 @@ export const products = [
     id: 105,
     title: "5 MESES RMK",
     price: "327,00",
-    link: "LINK PENDENTE - ME ENVIE NO CHAT",
+    link: "https://ev.braip.com/ref?pl=plaj9go2&ck=chew4mj1&af=afi28607gx",
     installments: [
       { parcelas: "1x", valor: "R$ 327,00", total: "R$ 327,00" },
       { parcelas: "2x", valor: "R$ 173,10", total: "R$ 346,20" },
