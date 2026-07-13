@@ -1,24 +1,27 @@
 import { useState, useRef, useEffect } from 'react';
 import { Upload, Copy, Image as ImageIcon, Trash2 } from 'lucide-react';
+import { get, set } from 'idb-keyval';
 
 export default function ImageUploader({ title, storageKey, onCopy }) {
   const [images, setImages] = useState([]);
   const fileInputRef = useRef(null);
 
-  // Load from IndexedDB/LocalStorage logic (simplified to local state for now, but we use FileReader to keep data URLs)
+  // Load from IndexedDB using idb-keyval
   useEffect(() => {
-    const saved = localStorage.getItem(storageKey);
-    if (saved) {
-      setImages(JSON.parse(saved));
-    }
+    get(storageKey).then((saved) => {
+      if (saved) {
+        setImages(saved);
+      }
+    });
   }, [storageKey]);
 
-  const saveImages = (newImages) => {
+  const saveImages = async (newImages) => {
     setImages(newImages);
     try {
-      localStorage.setItem(storageKey, JSON.stringify(newImages));
+      await set(storageKey, newImages);
     } catch (e) {
-      console.warn("Storage limit reached");
+      console.error("Erro ao salvar no IndexedDB", e);
+      onCopy("Erro ao armazenar imagem: sem espaço suficiente.");
     }
   };
 
