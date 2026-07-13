@@ -22,15 +22,18 @@ export default async function handler(req, res) {
 
   // Se o n8n enviar um texto no Body (JSON) ou na URL (?message=Texto), ele usa, senão usa o texto padrão.
   let customMessage = "Nova atualização ou clique recebido!";
+  let phone = null;
   
-  if (req.body && req.body.message) {
-    customMessage = req.body.message;
-  } else if (req.query && req.query.message) {
-    customMessage = req.query.message;
+  if (req.body) {
+    if (req.body.message) customMessage = req.body.message;
+    if (req.body.phone) phone = req.body.phone;
+  } else if (req.query) {
+    if (req.query.message) customMessage = req.query.message;
+    if (req.query.phone) phone = req.query.phone;
   }
 
   try {
-    await pusher.trigger('sales-planner', 'webhook-event', { message: customMessage });
+    await pusher.trigger('sales-planner', 'webhook-event', { message: customMessage, phone: phone });
     return res.status(200).json({ success: true, message: 'Notificação disparada' });
   } catch (error) {
     console.error('Erro no Pusher:', error);

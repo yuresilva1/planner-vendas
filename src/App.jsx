@@ -4,7 +4,7 @@ import { products } from './data/products';
 import ProductCard from './components/ProductCard';
 import ImageUploader from './components/ImageUploader';
 import CpfGenerator from './components/CpfGenerator';
-import { Target, Fingerprint, Info, Bell } from 'lucide-react';
+import { Target, Fingerprint, Info, Bell, Trash2, Copy } from 'lucide-react';
 import Pusher from 'pusher-js';
 
 function App() {
@@ -25,11 +25,8 @@ function App() {
     const channel = pusher.subscribe('sales-planner');
     channel.bind('webhook-event', function(data) {
       const id = Date.now();
-      setRealtimeNotifications(prev => [...prev, { id, message: data.message }]);
-      
-      setTimeout(() => {
-        setRealtimeNotifications(prev => prev.filter(n => n.id !== id));
-      }, 4000);
+      setRealtimeNotifications(prev => [...prev, { id, message: data.message, phone: data.phone }]);
+      // A notificação agora é persistente (não some sozinha)
     });
 
     return () => {
@@ -103,12 +100,40 @@ function App() {
       )}
 
       <div className="realtime-toast-container">
-        {realtimeNotifications.map(n => (
-          <div key={n.id} className="realtime-toast">
-            <Bell size={18} color="#10b981" />
-            <span>{n.message}</span>
-          </div>
-        ))}
+        {realtimeNotifications.map(n => {
+          // Tenta extrair telefone da mensagem (DDI + DDD + Numero) caso não venha separado
+          const phoneRegex = n.message.match(/55[0-9]{10,11}/);
+          const phoneToCopy = n.phone || (phoneRegex ? phoneRegex[0] : n.message);
+
+          return (
+            <div key={n.id} className="realtime-toast">
+              <div className="toast-content">
+                <Bell size={16} color="#10b981" style={{ flexShrink: 0, marginTop: '2px' }} />
+                <span style={{ whiteSpace: 'pre-wrap', lineHeight: '1.4' }}>{n.message}</span>
+              </div>
+              <div className="toast-actions">
+                <button 
+                  className="btn-secondary" 
+                  style={{ padding: '0.25rem 0.6rem', fontSize: '0.75rem', borderRadius: '4px' }}
+                  onClick={() => {
+                    navigator.clipboard.writeText(phoneToCopy);
+                    showToast("Contato copiado!");
+                  }}
+                >
+                  <Copy size={12} /> Copiar Contato
+                </button>
+                <button 
+                  className="btn-icon" 
+                  style={{ color: '#ef4444', padding: '0.25rem' }}
+                  onClick={() => setRealtimeNotifications(prev => prev.filter(item => item.id !== n.id))}
+                  title="Excluir Lead"
+                >
+                  <Trash2 size={16} />
+                </button>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
