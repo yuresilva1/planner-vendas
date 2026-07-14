@@ -102,11 +102,13 @@ function App() {
       </header>
 
       <main className="main-grid">
-        {/* Left Column: Affiliates */}
-        <section>
-          <h2 className="section-title">
-            <Info size={20} /> Ofertas Moujarim
-          </h2>
+        <section className="glass-panel panel-products" style={{ padding: '1.5rem' }}>
+          <div className="section-header">
+            <h2 className="section-title">
+              <Target size={24} className="text-accent" />
+              Produtos
+            </h2>
+          </div>
           <div className="products-grid">
             {products.map(product => (
               <ProductCard 
@@ -120,11 +122,7 @@ function App() {
           </div>
         </section>
 
-        {/* Right Column: Files */}
-        <section className="folders-grid">
-          <h2 className="section-title">
-            Arquivos Úteis
-          </h2>
+        <section className="folders-grid panel-folders">
           <ImageUploader 
             title="Finalização de Vendas" 
             storageKey="sales_images"

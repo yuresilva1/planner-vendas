@@ -38,7 +38,7 @@ export default function LeadQueue({ leads, setLeads, onCopy }) {
   const filteredLeads = leads.filter(lead => showArchived ? lead.archived : !lead.archived);
 
   return (
-    <div className="glass-panel folder-card">
+    <div className="glass-panel folder-card panel-queue">
       <div className="folder-header" style={{ marginBottom: '1.5rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <h3><UserPlus size={20} className="text-accent" /> Fila de Atendimento</h3>

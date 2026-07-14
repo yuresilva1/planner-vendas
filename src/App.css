@@ -524,6 +524,7 @@
   display: flex;
   flex-direction: column;
   gap: 0.75rem;
+  height: 280px; /* Altura fixa para todos */
   transition: transform 0.2s, border-color 0.2s;
 }
 
@@ -538,6 +539,7 @@
   align-items: center;
   border-bottom: 1px solid rgba(255, 255, 255, 0.05);
   padding-bottom: 0.5rem;
+  flex-shrink: 0;
 }
 
 .script-header h4 {
@@ -551,6 +553,17 @@
   color: var(--text-secondary);
   white-space: pre-wrap;
   line-height: 1.5;
+  flex: 1;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.script-body::-webkit-scrollbar {
+  width: 4px;
+}
+.script-body::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.2);
+  border-radius: 4px;
 }
 
 .dynamic-script-input {
@@ -571,4 +584,22 @@
 
 .dynamic-script-input:focus {
   border-color: rgba(255, 255, 255, 0.3);
+}
+
+/* Cores dos Setores */
+.panel-products {
+  border-top: 3px solid #3b82f6; /* Azul */
+}
+
+.panel-queue {
+  border-top: 3px solid #f59e0b; /* Laranja */
+}
+
+.panel-scripts {
+  border-top: 3px solid #8b5cf6; /* Roxo */
+}
+
+/* As pastas de imagens terão verde pelo style inline ou adicionando classe */
+.panel-folders .folder-card {
+  border-top: 3px solid #10b981; /* Verde */
 }

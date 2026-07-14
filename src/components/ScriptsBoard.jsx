@@ -67,7 +67,7 @@ export default function ScriptsBoard({ onCopy }) {
   };
 
   return (
-    <div className="glass-panel folder-card" style={{ marginTop: '1.5rem' }}>
+    <div className="glass-panel folder-card panel-scripts" style={{ marginTop: '1.5rem' }}>
       <div className="folder-header" style={{ marginBottom: '1.5rem' }}>
         <h3><MessageSquareText size={20} className="text-accent" /> Scripts e Mensagens Rápidas</h3>
       </div>
