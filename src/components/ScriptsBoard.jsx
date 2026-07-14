@@ -18,6 +18,19 @@ Estou aqui para te dar total segurança. Quero que você compre e durma com a co
     title: 'Tem garantia?',
     content: `Tem sim! Nossa loja é autorizada e todo cliente tem a garantia de receber o produto direitinho, no prazo e com suporte total. Além disso, seguimos todos os protocolos de segurança, envio e rastreamento.
 E mais: você tem meu suporte total aqui no WhatsApp. Para qualquer dúvida ou acompanhamento, pode contar comigo!`
+  },
+  {
+    id: 'depois-falo',
+    title: 'Objeção: Depois falo com você',
+    content: `Será que consegue me confirmar no máximo em 1 hora? Porque como estamos em queima de estoque, essas unidades promocionais devem acabar rápido. Quero garantir que não fique sem e que aproveite o frete grátis!`
+  },
+  {
+    id: 'cartao-vira',
+    title: 'Objeção: Cartão vira tal dia',
+    content: `Vamos agendar então para tal dia? Com seu pedido agendado eu consigo deixar reservado para a senhora com todas as condições que te passei, porque como estamos em queima de estoque vai acabar em breve... Pode ser?
+
+[Se responder SIM]:
+Me deixa seu endereço completo e seu nome por gentileza que já vou deixar agendado.`
   }
 ];
 
