@@ -44,6 +44,16 @@ Me deixa seu endereço completo e seu nome por gentileza que já vou deixar agen
 ⚖️ *Cromo:* Diminui drasticamente aquela vontade incontrolável de comer doces e carboidratos.
 
 Tudo pensado para te dar resultado rápido sem prejudicar a saúde! Ficou com alguma dúvida sobre eles?`
+  },
+  {
+    id: 'pos-boleto',
+    title: 'Pós Boleto Gerado',
+    content: `Mandei o boleto das 3 formas: por foto, em PDF e também o código de barras (copia e cola). Assim que conseguir efetuar o pagamento me avisa, que já consigo adiantar o seu pedido na logística!`
+  },
+  {
+    id: 'pos-pix',
+    title: 'Pós PIX Gerado',
+    content: `Mandei a chave PIX (Copia e Cola) logo acima para facilitar! Assim que concluir o pagamento, me avisa ou manda o comprovante aqui para eu já adiantar a separação do seu pedido na logística, combinado?`
   }
 ];
 
