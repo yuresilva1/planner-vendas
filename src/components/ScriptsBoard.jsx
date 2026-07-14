@@ -31,6 +31,19 @@ E mais: você tem meu suporte total aqui no WhatsApp. Para qualquer dúvida ou a
 
 [Se responder SIM]:
 Me deixa seu endereço completo e seu nome por gentileza que já vou deixar agendado.`
+  },
+  {
+    id: 'composicao',
+    title: 'Objeção: Qual a composição? É natural?',
+    content: `A nossa fórmula é 100% natural e super completa, olha só os ativos:
+🌱 *Psyllium:* Expande no estômago e promove saciedade rápida, tirando a fome toda hora.
+🛡️ *Cúrcuma:* Anti-inflamatório potente que faz o corpo queimar gordura com mais eficiência.
+❌ *Quitosana:* Age como uma "esponja" no estômago, reduzindo a absorção de gordura da comida.
+☕ *Cafeína:* Acelera o metabolismo e te dá muita disposição para o dia a dia.
+🍊 *Laranja Moro:* O grande segredo para focar na queima daquela gordura localizada na barriga.
+⚖️ *Cromo:* Diminui drasticamente aquela vontade incontrolável de comer doces e carboidratos.
+
+Tudo pensado para te dar resultado rápido sem prejudicar a saúde! Ficou com alguma dúvida sobre eles?`
   }
 ];
 
