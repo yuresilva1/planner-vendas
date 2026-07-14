@@ -92,8 +92,13 @@ function App() {
 
   return (
     <div className="app-container">
-      <header className="header">
-        <h1><Target size={32} color="#10b981" /> <span>Sales</span>Planner</h1>
+      <header className="app-header">
+        <div className="header-content">
+          <h1>
+            <span className="gradient-text">Roteiro de Vendas</span> Yure
+          </h1>
+          <p className="subtitle">Gestão de Vendas & Afiliados</p>
+        </div>
         <div className="header-actions">
           <button className="btn-primary" onClick={() => setShowCpfModal(true)}>
             <Fingerprint size={18} /> Gerador de CPF
