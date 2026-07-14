@@ -4,19 +4,19 @@ const SCRIPTS = [
   {
     id: 'pagamento-entrega',
     title: 'Pagamento na Entrega',
-    content: `Infelizmente não conseguimos trabalhar com pagamento na entrega, por questão de logística. Enviemos mais de mil pedidos para todo o Brasil e esse modelo não se encaixa. A gente até tentou, só que aí tinha questão de cronagem de cartão, o motoboy que a gente não pode confiar.`
+    content: `Infelizmente não conseguimos trabalhar com pagamento na entrega por questões de logística. Enviamos milhares de pedidos para todo o Brasil e esse modelo não se encaixa. Nós até tentamos, mas tivemos problemas com clonagem de cartão e entregadores não confiáveis.`
   },
   {
     id: 'golpe',
     title: 'Objeção: Golpe / Medo',
-    content: `Ah, eu entendo a sua preocupação, ainda mais com tanta coisa acontecendo na internet, né? Mas pode ficar tranquilo. Nossa empresa é séria, eu vou te enviar aqui todos os dados, incluindo CNPJ, fotos, depoimentos de clientes reais que já receberam e tiveram ótimos resultados.
-Estou aqui pra te dar total segurança, eu quero que você compre e durma com consciência tranquila. Pode confiar.`
+    content: `Ah, eu entendo a sua preocupação, ainda mais com tanta coisa acontecendo na internet, né? Mas pode ficar tranquilo(a). Nossa empresa é séria. Vou te enviar aqui todos os nossos dados, incluindo CNPJ, fotos e depoimentos de clientes reais que já receberam nossos produtos e tiveram ótimos resultados.
+Estou aqui para te dar total segurança. Quero que você compre e durma com a consciência tranquila. Pode confiar!`
   },
   {
     id: 'garantia',
     title: 'Tem garantia?',
-    content: `Tem sim! Nossa loja é autorizada e todo cliente tem a garantia de receber o produto direitinho, no prazo , com suporte total. E mais: seguimos todos os protocolos de segurança, envio e acompanhamento.
-Além disso, você tem meu suporte total aqui no WhatsApp, qualquer dúvida ou acompanhamento, pode contar comigo!`
+    content: `Tem sim! Nossa loja é autorizada e todo cliente tem a garantia de receber o produto direitinho, no prazo e com suporte total. Além disso, seguimos todos os protocolos de segurança, envio e rastreamento.
+E mais: você tem meu suporte total aqui no WhatsApp. Para qualquer dúvida ou acompanhamento, pode contar comigo!`
   }
 ];
 
