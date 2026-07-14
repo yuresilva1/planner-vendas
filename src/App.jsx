@@ -4,6 +4,7 @@ import { products } from './data/products';
 import ProductCard from './components/ProductCard';
 import ImageUploader from './components/ImageUploader';
 import LeadQueue from './components/LeadQueue';
+import ScriptsBoard from './components/ScriptsBoard';
 import CpfGenerator from './components/CpfGenerator';
 import { Target, Fingerprint, Info, Bell, Trash2, Copy } from 'lucide-react';
 import Pusher from 'pusher-js';
@@ -144,6 +145,8 @@ function App() {
           onCopy={showToast} 
         />
       )}
+
+      <ScriptsBoard onCopy={showToast} />
 
       {showCpfModal && (
         <CpfGenerator 
