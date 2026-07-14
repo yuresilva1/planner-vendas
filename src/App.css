@@ -552,3 +552,23 @@
   white-space: pre-wrap;
   line-height: 1.5;
 }
+
+.dynamic-script-input {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 0.95rem;
+  min-height: 120px;
+  resize: vertical;
+  outline: none;
+  width: 100%;
+  line-height: 1.5;
+  transition: border-color 0.2s;
+}
+
+.dynamic-script-input:focus {
+  border-color: rgba(255, 255, 255, 0.3);
+}
