@@ -77,6 +77,11 @@ export default function ScriptsBoard({ onCopy }) {
     localStorage.setItem('sales_schedules', schedules);
   }, [schedules]);
 
+  // Lógica para detectar se há agendamento para hoje no texto
+  const todayDateStr = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+  const todayShortStr = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
+  const hasScheduleToday = schedules.includes(todayDateStr) || schedules.includes(todayShortStr);
+
   const handleCopy = async (text) => {
     try {
       await navigator.clipboard.writeText(text);
@@ -121,10 +126,12 @@ export default function ScriptsBoard({ onCopy }) {
         </div>
 
         {/* Bloco Dinâmico de Agendamentos (Notepad) */}
-        <div className="script-card group">
+        <div className={`script-card group ${hasScheduleToday ? 'notify-card' : ''}`}>
           <div className="script-header">
-            <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <Calendar size={16} className="text-accent" /> Agendamentos
+            <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasScheduleToday ? '#ef4444' : 'inherit' }}>
+              <Calendar size={16} className={hasScheduleToday ? '' : 'text-accent'} /> 
+              Agendamentos
+              {hasScheduleToday && <span className="badge bg-danger" style={{ marginLeft: '0.5rem', animation: 'pulseWarning 2s infinite' }}>HOJE!</span>}
             </h4>
             <button 
               className="btn-secondary btn-sm"

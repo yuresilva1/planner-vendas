@@ -610,3 +610,20 @@
 .panel-folders .folder-card {
   border-top: 3px solid #10b981; /* Verde */
 }
+
+/* Notificação do Card de Agendamentos */
+@keyframes pulseWarning {
+  0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+}
+
+.notify-card {
+  border-color: #ef4444 !important;
+  animation: pulseWarning 2s infinite;
+}
+
+.bg-danger {
+  background-color: #ef4444 !important;
+  color: white !important;
+}
