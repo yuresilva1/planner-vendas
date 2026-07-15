@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Copy, MessageSquareText, PhoneCall } from 'lucide-react';
+import { Copy, MessageSquareText, PhoneCall, Calendar } from 'lucide-react';
 
 const SCRIPTS = [
   {
@@ -62,9 +62,20 @@ export default function ScriptsBoard({ onCopy }) {
     return localStorage.getItem('dynamic_call_script') || `Olá, tudo bem? Me chamo Claudio Ruiz, estava em atendimento com você ali no WhatsApp, e achei melhor finalizarmos aqui por ligação para lhe passar total segurança na sua compra.\n\nFicou alguma dúvida em relação ao tratamento?`;
   });
 
+  const [schedules, setSchedules] = useState(() => {
+    return localStorage.getItem('sales_schedules') || `[22:02, 14/07/2026] +55 64 9214-2881: Iris de Fátima Silva Rodrigues
+[22:02, 14/07/2026] +55 64 9214-2881: Rua João Rodrigues Jota número 70
+[22:02, 14/07/2026] +55 64 9214-2881: Itumbiara Goiás
+[22:03, 14/07/2026] +55 64 9214-2881: 75530-370`;
+  });
+
   useEffect(() => {
     localStorage.setItem('dynamic_call_script', callScript);
   }, [callScript]);
+
+  useEffect(() => {
+    localStorage.setItem('sales_schedules', schedules);
+  }, [schedules]);
 
   const handleCopy = async (text) => {
     try {
@@ -104,6 +115,31 @@ export default function ScriptsBoard({ onCopy }) {
               value={callScript}
               onChange={(e) => setCallScript(e.target.value)}
               placeholder="Digite ou cole aqui o seu script de ligação..."
+              style={{ flex: 1, border: 'none', padding: 0, minHeight: '120px', background: 'transparent' }}
+            />
+          </div>
+        </div>
+
+        {/* Bloco Dinâmico de Agendamentos (Notepad) */}
+        <div className="script-card group">
+          <div className="script-header">
+            <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <Calendar size={16} className="text-accent" /> Agendamentos
+            </h4>
+            <button 
+              className="btn-secondary btn-sm"
+              onClick={() => handleCopy(schedules)}
+              title="Copiar Agendamentos"
+            >
+              <Copy size={14} /> Copiar
+            </button>
+          </div>
+          <div className="script-body" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+            <textarea 
+              className="dynamic-script-input"
+              value={schedules}
+              onChange={(e) => setSchedules(e.target.value)}
+              placeholder="Cole aqui os dados dos clientes agendados..."
               style={{ flex: 1, border: 'none', padding: 0, minHeight: '120px', background: 'transparent' }}
             />
           </div>
