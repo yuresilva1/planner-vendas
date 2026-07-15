@@ -4,6 +4,7 @@ import { products } from './data/products';
 import ProductCard from './components/ProductCard';
 import ImageUploader from './components/ImageUploader';
 import LeadQueue from './components/LeadQueue';
+import ScheduleBoard from './components/ScheduleBoard';
 import ScriptsBoard from './components/ScriptsBoard';
 import CpfGenerator from './components/CpfGenerator';
 import { Target, Fingerprint, Info, Bell, Trash2, Copy } from 'lucide-react';
@@ -148,6 +149,8 @@ function App() {
           onCopy={showToast} 
         />
       )}
+
+      <ScheduleBoard onCopy={showToast} />
 
       <ScriptsBoard onCopy={showToast} />
 

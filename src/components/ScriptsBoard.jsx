@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Copy, MessageSquareText, PhoneCall, Calendar } from 'lucide-react';
+import { Copy, MessageSquareText, PhoneCall } from 'lucide-react';
 
 const SCRIPTS = [
   {
@@ -62,25 +62,9 @@ export default function ScriptsBoard({ onCopy }) {
     return localStorage.getItem('dynamic_call_script') || `Olá, tudo bem? Me chamo Claudio Ruiz, estava em atendimento com você ali no WhatsApp, e achei melhor finalizarmos aqui por ligação para lhe passar total segurança na sua compra.\n\nFicou alguma dúvida em relação ao tratamento?`;
   });
 
-  const [schedules, setSchedules] = useState(() => {
-    return localStorage.getItem('sales_schedules') || `[22:02, 14/07/2026] +55 64 9214-2881: Iris de Fátima Silva Rodrigues
-[22:02, 14/07/2026] +55 64 9214-2881: Rua João Rodrigues Jota número 70
-[22:02, 14/07/2026] +55 64 9214-2881: Itumbiara Goiás
-[22:03, 14/07/2026] +55 64 9214-2881: 75530-370`;
-  });
-
   useEffect(() => {
     localStorage.setItem('dynamic_call_script', callScript);
   }, [callScript]);
-
-  useEffect(() => {
-    localStorage.setItem('sales_schedules', schedules);
-  }, [schedules]);
-
-  // Lógica para detectar se há agendamento para hoje no texto
-  const todayDateStr = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
-  const todayShortStr = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
-  const hasScheduleToday = schedules.includes(todayDateStr) || schedules.includes(todayShortStr);
 
   const handleCopy = async (text) => {
     try {
@@ -120,33 +104,6 @@ export default function ScriptsBoard({ onCopy }) {
               value={callScript}
               onChange={(e) => setCallScript(e.target.value)}
               placeholder="Digite ou cole aqui o seu script de ligação..."
-              style={{ flex: 1, border: 'none', padding: 0, minHeight: '120px', background: 'transparent' }}
-            />
-          </div>
-        </div>
-
-        {/* Bloco Dinâmico de Agendamentos (Notepad) */}
-        <div className={`script-card group ${hasScheduleToday ? 'notify-card' : ''}`}>
-          <div className="script-header">
-            <h4 style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: hasScheduleToday ? '#ef4444' : 'inherit' }}>
-              <Calendar size={16} className={hasScheduleToday ? '' : 'text-accent'} /> 
-              Agendamentos
-              {hasScheduleToday && <span className="badge bg-danger" style={{ marginLeft: '0.5rem', animation: 'pulseWarning 2s infinite' }}>HOJE!</span>}
-            </h4>
-            <button 
-              className="btn-secondary btn-sm"
-              onClick={() => handleCopy(schedules)}
-              title="Copiar Agendamentos"
-            >
-              <Copy size={14} /> Copiar
-            </button>
-          </div>
-          <div className="script-body" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-            <textarea 
-              className="dynamic-script-input"
-              value={schedules}
-              onChange={(e) => setSchedules(e.target.value)}
-              placeholder="Cole aqui os dados dos clientes agendados..."
               style={{ flex: 1, border: 'none', padding: 0, minHeight: '120px', background: 'transparent' }}
             />
           </div>
