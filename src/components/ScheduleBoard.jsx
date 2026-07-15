@@ -11,6 +11,7 @@ export default function ScheduleBoard({ onCopy }) {
       id: Date.now(),
       product: 'Mounjarim',
       value: '297,00',
+      scheduleDate: new Date().toISOString().split('T')[0], // Hoje por padrão
       text: `[22:02, 14/07/2026] +55 64 9214-2881: Iris de Fátima Silva Rodrigues\n[22:02, 14/07/2026] +55 64 9214-2881: Rua João Rodrigues Jota número 70\n[22:02, 14/07/2026] +55 64 9214-2881: Itumbiara Goiás\n[22:03, 14/07/2026] +55 64 9214-2881: 75530-370`
     }];
   });
@@ -20,7 +21,7 @@ export default function ScheduleBoard({ onCopy }) {
   }, [schedules]);
 
   const addSchedule = () => {
-    setSchedules([{ id: Date.now(), text: '', product: '', value: '' }, ...schedules]);
+    setSchedules([{ id: Date.now(), text: '', product: '', value: '', scheduleDate: '' }, ...schedules]);
   };
 
   const updateSchedule = (id, field, val) => {
@@ -32,7 +33,14 @@ export default function ScheduleBoard({ onCopy }) {
   };
 
   const handleCopy = async (sch) => {
-    const textToCopy = `Produto: ${sch.product || 'Não informado'} | Valor: R$ ${sch.value || '0,00'}\n\nDados do Cliente:\n${sch.text}`;
+    // Formata a data se existir
+    let dateStr = 'Não definida';
+    if (sch.scheduleDate) {
+      const [y, m, d] = sch.scheduleDate.split('-');
+      dateStr = `${d}/${m}/${y}`;
+    }
+
+    const textToCopy = `📅 Agendado para: ${dateStr}\nProduto: ${sch.product || 'Não informado'} | Valor: R$ ${sch.value || '0,00'}\n\nDados do Cliente:\n${sch.text}`;
     try {
       await navigator.clipboard.writeText(textToCopy);
       onCopy("Agendamento copiado com sucesso!");
@@ -42,6 +50,7 @@ export default function ScheduleBoard({ onCopy }) {
     }
   };
 
+  const todayISOStr = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
   const todayDateStr = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit', year: 'numeric' });
   const todayShortStr = new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: '2-digit' });
 
@@ -67,7 +76,9 @@ export default function ScheduleBoard({ onCopy }) {
           </div>
         ) : (
           schedules.map(sch => {
-            const isToday = sch.text.includes(todayDateStr) || sch.text.includes(todayShortStr);
+            const isToday = (sch.scheduleDate && sch.scheduleDate === todayISOStr) 
+                            || sch.text.includes(todayDateStr) 
+                            || sch.text.includes(todayShortStr);
             return (
               <div 
                 key={sch.id} 
@@ -77,7 +88,7 @@ export default function ScheduleBoard({ onCopy }) {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
                   <span style={{ fontWeight: 600, color: isToday ? '#ef4444' : 'inherit', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                     {isToday && <span className="badge bg-danger" style={{ animation: 'pulseWarning 2s infinite' }}>HOJE!</span>}
-                    {isToday ? 'Agendado para Hoje' : 'Agendamento'}
+                    {isToday ? 'Lembrete: Entrar em contato HOJE' : 'Lembrete de Agendamento'}
                   </span>
                   <div style={{ display: 'flex', gap: '0.5rem' }}>
                     <button className="btn-secondary btn-sm" onClick={() => handleCopy(sch)} title="Copiar Tudo">
@@ -89,13 +100,20 @@ export default function ScheduleBoard({ onCopy }) {
                   </div>
                 </div>
                 
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+                  <input 
+                    type="date" 
+                    value={sch.scheduleDate || ''} 
+                    onChange={(e) => updateSchedule(sch.id, 'scheduleDate', e.target.value)}
+                    style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                    title="Data do Agendamento / Lembrete"
+                  />
                   <input 
                     type="text" 
                     placeholder="Nome do Produto" 
                     value={sch.product || ''} 
                     onChange={(e) => updateSchedule(sch.id, 'product', e.target.value)}
-                    style={{ flex: 1, padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                    style={{ flex: 1, minWidth: '150px', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
                   />
                   <input 
                     type="text" 
@@ -110,7 +128,7 @@ export default function ScheduleBoard({ onCopy }) {
                   className="lead-notes"
                   value={sch.text}
                   onChange={(e) => updateSchedule(sch.id, 'text', e.target.value)}
-                  placeholder="Cole os dados do cliente e a data aqui (salva sozinho)..."
+                  placeholder="Cole os dados do cliente aqui..."
                   style={{ minHeight: '100px', width: '100%', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)' }}
                 />
               </div>
