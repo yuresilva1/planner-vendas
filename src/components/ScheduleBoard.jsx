@@ -128,21 +128,20 @@ ${sch.notes ? `📝 *Obs:* ${sch.notes}\n\n` : ''}Qualquer dúvida, estou à dis
                   </div>
                 </div>
                 
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                <div className="schedule-row">
                   <input 
                     type="text" 
                     placeholder="Nome do Cliente" 
                     value={sch.clientName || ''} 
                     onChange={(e) => updateSchedule(sch.id, 'clientName', e.target.value)}
-                    className="styled-input"
-                    style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                    className="schedule-input"
                   />
                   <input 
                     type="text" 
                     placeholder="Telefone (WhatsApp)" 
                     value={sch.clientPhone || ''} 
                     onChange={(e) => updateSchedule(sch.id, 'clientPhone', e.target.value)}
-                    style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                    className="schedule-input"
                   />
                 </div>
 
@@ -152,40 +151,43 @@ ${sch.notes ? `📝 *Obs:* ${sch.notes}\n\n` : ''}Qualquer dúvida, estou à dis
                     placeholder="Endereço Completo (Rua, Número, Bairro, Cidade-UF, CEP)" 
                     value={sch.clientAddress || ''} 
                     onChange={(e) => updateSchedule(sch.id, 'clientAddress', e.target.value)}
-                    style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                    className="schedule-input"
                   />
                 </div>
 
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
+                <div className="schedule-row">
                   <input 
                     type="date" 
                     value={sch.scheduleDate || ''} 
                     onChange={(e) => updateSchedule(sch.id, 'scheduleDate', e.target.value)}
-                    style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                    className="schedule-input"
                     title="Data do Agendamento / Lembrete"
+                    style={{ flex: '0 0 auto', width: 'auto' }}
                   />
                   <input 
                     type="text" 
                     placeholder="Nome do Produto" 
                     value={sch.product || ''} 
                     onChange={(e) => updateSchedule(sch.id, 'product', e.target.value)}
-                    style={{ flex: 1, minWidth: '150px', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                    className="schedule-input"
+                    style={{ flex: 2 }}
                   />
                   <input 
                     type="text" 
                     placeholder="Valor (R$)" 
                     value={sch.value || ''} 
                     onChange={(e) => updateSchedule(sch.id, 'value', e.target.value)}
-                    style={{ width: '120px', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                    className="schedule-input"
+                    style={{ flex: 1 }}
                   />
                 </div>
 
                 <textarea 
-                  className="lead-notes"
+                  className="schedule-input"
                   value={sch.notes !== undefined ? sch.notes : sch.text}
                   onChange={(e) => updateSchedule(sch.id, 'notes', e.target.value)}
                   placeholder="Observações adicionais (opcional)..."
-                  style={{ minHeight: '60px', width: '100%', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)' }}
+                  style={{ minHeight: '80px', resize: 'vertical' }}
                 />
               </div>
             )
