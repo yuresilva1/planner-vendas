@@ -1,5 +1,5 @@
-import { useState, useEffect } from 'react';
-import { Calendar, Plus, Trash2, Copy } from 'lucide-react';
+import { useState } from 'react';
+import { Calendar, Plus, Trash2, Copy, Save } from 'lucide-react';
 
 export default function ScheduleBoard({ onCopy }) {
   const [schedules, setSchedules] = useState(() => {
@@ -22,9 +22,21 @@ export default function ScheduleBoard({ onCopy }) {
     }];
   });
 
-  useEffect(() => {
-    localStorage.setItem('sales_schedules_list', JSON.stringify(schedules));
-  }, [schedules]);
+  const saveSchedules = () => {
+    const uppercased = schedules.map(sch => ({
+      ...sch,
+      clientName: (sch.clientName || '').toUpperCase(),
+      clientPhone: (sch.clientPhone || '').toUpperCase(),
+      clientAddress: (sch.clientAddress || '').toUpperCase(),
+      product: (sch.product || '').toUpperCase(),
+      value: (sch.value || '').toUpperCase(),
+      notes: (sch.notes !== undefined ? sch.notes : (sch.text || '')).toUpperCase()
+    }));
+    
+    setSchedules(uppercased);
+    localStorage.setItem('sales_schedules_list', JSON.stringify(uppercased));
+    onCopy("Agendamentos salvos!");
+  };
 
   const addSchedule = () => {
     setSchedules([{ 
@@ -87,13 +99,22 @@ ${sch.notes ? `📝 *Obs:* ${sch.notes}\n\n` : ''}Qualquer dúvida, estou à dis
         <h3 style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
           <Calendar size={20} className="text-accent" /> Agendamentos
         </h3>
-        <button 
-          className="btn-primary btn-sm" 
-          onClick={addSchedule}
-          style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
-        >
-          <Plus size={16} /> Novo Agendamento
-        </button>
+        <div style={{ display: 'flex', gap: '0.5rem' }}>
+          <button 
+            className="btn-secondary btn-sm" 
+            onClick={saveSchedules}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', border: '1px solid #10b981', color: '#10b981' }}
+          >
+            <Save size={16} /> Salvar
+          </button>
+          <button 
+            className="btn-primary btn-sm" 
+            onClick={addSchedule}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}
+          >
+            <Plus size={16} /> Novo
+          </button>
+        </div>
       </div>
 
       <div className="leads-list">
