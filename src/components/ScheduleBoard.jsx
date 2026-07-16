@@ -4,15 +4,21 @@ import { Calendar, Plus, Trash2, Copy } from 'lucide-react';
 export default function ScheduleBoard({ onCopy }) {
   const [schedules, setSchedules] = useState(() => {
     const saved = localStorage.getItem('sales_schedules_list');
-    if (saved) return JSON.parse(saved);
+    if (saved) {
+      // Migrate old data if necessary or just load it
+      return JSON.parse(saved);
+    }
     
     // Default example if empty
     return [{
       id: Date.now(),
+      clientName: 'Iris de Fátima Silva Rodrigues',
+      clientPhone: '+55 64 9214-2881',
+      clientAddress: 'Rua João Rodrigues Jota número 70, Itumbiara Goiás, 75530-370',
       product: 'Mounjarim',
       value: '297,00',
       scheduleDate: new Date().toISOString().split('T')[0], // Hoje por padrão
-      text: `[22:02, 14/07/2026] +55 64 9214-2881: Iris de Fátima Silva Rodrigues\n[22:02, 14/07/2026] +55 64 9214-2881: Rua João Rodrigues Jota número 70\n[22:02, 14/07/2026] +55 64 9214-2881: Itumbiara Goiás\n[22:03, 14/07/2026] +55 64 9214-2881: 75530-370`
+      notes: ''
     }];
   });
 
@@ -21,7 +27,16 @@ export default function ScheduleBoard({ onCopy }) {
   }, [schedules]);
 
   const addSchedule = () => {
-    setSchedules([{ id: Date.now(), text: '', product: '', value: '', scheduleDate: '' }, ...schedules]);
+    setSchedules([{ 
+      id: Date.now(), 
+      clientName: '',
+      clientPhone: '',
+      clientAddress: '',
+      product: '', 
+      value: '', 
+      scheduleDate: '',
+      notes: ''
+    }, ...schedules]);
   };
 
   const updateSchedule = (id, field, val) => {
@@ -33,14 +48,26 @@ export default function ScheduleBoard({ onCopy }) {
   };
 
   const handleCopy = async (sch) => {
-    // Formata a data se existir
     let dateStr = 'Não definida';
     if (sch.scheduleDate) {
       const [y, m, d] = sch.scheduleDate.split('-');
       dateStr = `${d}/${m}/${y}`;
     }
 
-    const textToCopy = `📅 Agendado para: ${dateStr}\nProduto: ${sch.product || 'Não informado'} | Valor: R$ ${sch.value || '0,00'}\n\nDados do Cliente:\n${sch.text}`;
+    const textToCopy = `✅ *Agendamento Confirmado!*
+Olha aqui, fiz o seu agendamento no meu sistema e já deixei tudo reservado para você:
+
+👤 *Cliente:* ${sch.clientName || 'Não informado'}
+📱 *Telefone:* ${sch.clientPhone || 'Não informado'}
+📦 *Produto:* ${sch.product || 'Não informado'}
+💰 *Valor Combinado:* R$ ${sch.value || '0,00'}
+📅 *Data do Agendamento:* ${dateStr}
+
+📍 *Endereço de Entrega:*
+${sch.clientAddress || 'Não informado'}
+
+${sch.notes ? `📝 *Obs:* ${sch.notes}\n\n` : ''}Qualquer dúvida, estou à disposição! 🚀`;
+
     try {
       await navigator.clipboard.writeText(textToCopy);
       onCopy("Agendamento copiado com sucesso!");
@@ -76,9 +103,10 @@ export default function ScheduleBoard({ onCopy }) {
           </div>
         ) : (
           schedules.map(sch => {
+            // Check if today matches either explicit date or mention in notes
             const isToday = (sch.scheduleDate && sch.scheduleDate === todayISOStr) 
-                            || sch.text.includes(todayDateStr) 
-                            || sch.text.includes(todayShortStr);
+                            || (sch.notes && sch.notes.includes(todayDateStr)) 
+                            || (sch.notes && sch.notes.includes(todayShortStr));
             return (
               <div 
                 key={sch.id} 
@@ -100,6 +128,34 @@ export default function ScheduleBoard({ onCopy }) {
                   </div>
                 </div>
                 
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', marginBottom: '0.5rem' }}>
+                  <input 
+                    type="text" 
+                    placeholder="Nome do Cliente" 
+                    value={sch.clientName || ''} 
+                    onChange={(e) => updateSchedule(sch.id, 'clientName', e.target.value)}
+                    className="styled-input"
+                    style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                  />
+                  <input 
+                    type="text" 
+                    placeholder="Telefone (WhatsApp)" 
+                    value={sch.clientPhone || ''} 
+                    onChange={(e) => updateSchedule(sch.id, 'clientPhone', e.target.value)}
+                    style={{ padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '0.5rem' }}>
+                  <input 
+                    type="text" 
+                    placeholder="Endereço Completo (Rua, Número, Bairro, Cidade-UF, CEP)" 
+                    value={sch.clientAddress || ''} 
+                    onChange={(e) => updateSchedule(sch.id, 'clientAddress', e.target.value)}
+                    style={{ width: '100%', padding: '0.5rem', borderRadius: 'var(--radius-sm)', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', color: 'var(--text-primary)', outline: 'none' }}
+                  />
+                </div>
+
                 <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.5rem', flexWrap: 'wrap' }}>
                   <input 
                     type="date" 
@@ -126,10 +182,10 @@ export default function ScheduleBoard({ onCopy }) {
 
                 <textarea 
                   className="lead-notes"
-                  value={sch.text}
-                  onChange={(e) => updateSchedule(sch.id, 'text', e.target.value)}
-                  placeholder="Cole os dados do cliente aqui..."
-                  style={{ minHeight: '100px', width: '100%', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)' }}
+                  value={sch.notes !== undefined ? sch.notes : sch.text}
+                  onChange={(e) => updateSchedule(sch.id, 'notes', e.target.value)}
+                  placeholder="Observações adicionais (opcional)..."
+                  style={{ minHeight: '60px', width: '100%', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)' }}
                 />
               </div>
             )
