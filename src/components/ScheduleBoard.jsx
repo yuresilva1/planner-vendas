@@ -29,8 +29,7 @@ export default function ScheduleBoard({ onCopy }) {
       clientPhone: (sch.clientPhone || '').toUpperCase(),
       clientAddress: (sch.clientAddress || '').toUpperCase(),
       product: (sch.product || '').toUpperCase(),
-      value: (sch.value || '').toUpperCase(),
-      notes: (sch.notes !== undefined ? sch.notes : (sch.text || '')).toUpperCase()
+      value: (sch.value || '').toUpperCase()
     }));
     
     setSchedules(uppercased);
@@ -39,15 +38,14 @@ export default function ScheduleBoard({ onCopy }) {
   };
 
   const addSchedule = () => {
-    setSchedules([{ 
+      setSchedules([{ 
       id: Date.now(), 
       clientName: '',
       clientPhone: '',
       clientAddress: '',
       product: '', 
       value: '', 
-      scheduleDate: '',
-      notes: ''
+      scheduleDate: ''
     }, ...schedules]);
   };
 
@@ -78,7 +76,7 @@ Olha aqui, fiz o seu agendamento no meu sistema e já deixei tudo reservado para
 📍 *Endereço de Entrega:*
 ${sch.clientAddress || 'Não informado'}
 
-${sch.notes ? `📝 *Obs:* ${sch.notes}\n\n` : ''}Qualquer dúvida, estou à disposição! 🚀`;
+Qualquer dúvida, estou à disposição! 🚀`;
 
     try {
       await navigator.clipboard.writeText(textToCopy);
@@ -202,14 +200,6 @@ ${sch.notes ? `📝 *Obs:* ${sch.notes}\n\n` : ''}Qualquer dúvida, estou à dis
                     style={{ flex: 1 }}
                   />
                 </div>
-
-                <textarea 
-                  className="schedule-input"
-                  value={sch.notes !== undefined ? sch.notes : sch.text}
-                  onChange={(e) => updateSchedule(sch.id, 'notes', e.target.value)}
-                  placeholder="Observações adicionais (opcional)..."
-                  style={{ minHeight: '80px', resize: 'vertical' }}
-                />
               </div>
             )
           })

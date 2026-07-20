@@ -20,6 +20,13 @@ function App() {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const productsByCategory = products.reduce((acc, product) => {
+    const cat = product.category || 'Mounjarim';
+    if (!acc[cat]) acc[cat] = [];
+    acc[cat].push(product);
+    return acc;
+  }, {});
+
   useEffect(() => {
     localStorage.setItem('sales_leads', JSON.stringify(leads));
   }, [leads]);
@@ -112,18 +119,34 @@ function App() {
           <div className="section-header">
             <h2 className="section-title">
               <Target size={24} className="text-accent" />
-              Produtos
+              Ofertas e Produtos
             </h2>
           </div>
-          <div className="products-grid">
-            {products.map(product => (
-              <ProductCard 
-                key={product.id} 
-                product={product} 
-                isExpanded={expandedProductId === product.id}
-                onToggle={() => setExpandedProductId(prev => prev === product.id ? null : product.id)}
-                onCopy={showToast} 
-              />
+          <div className="categories-container" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            {Object.entries(productsByCategory).map(([categoryName, categoryProducts]) => (
+              <details 
+                key={categoryName} 
+                className="category-accordion"
+                open={categoryName === 'MonjaPro (Pagamento na Entrega)'} // Exibe o novo aberto por padrão ou fechado
+              >
+                <summary className="category-summary" style={{ padding: '1rem', cursor: 'pointer', fontWeight: 'bold', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(0,0,0,0.3)', borderRadius: 'var(--radius-sm)', listStyle: 'none', display: 'flex', justifyContent: 'space-between' }}>
+                  <span>{categoryName}</span>
+                  <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Ver Produtos ▼</span>
+                </summary>
+                <div className="products-grid" style={{ marginTop: '1rem' }}>
+                  {categoryProducts.map(product => (
+                    <ProductCard 
+                      key={product.id} 
+                      product={product} 
+                      isExpanded={expandedProductId === product.id}
+                      onToggle={() => setExpandedProductId(
+                        expandedProductId === product.id ? null : product.id
+                      )}
+                      onCopy={showToast}
+                    />
+                  ))}
+                </div>
+              </details>
             ))}
           </div>
         </section>

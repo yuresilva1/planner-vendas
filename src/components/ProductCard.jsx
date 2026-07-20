@@ -30,10 +30,21 @@ export default function ProductCard({ product, isExpanded, onToggle, onCopy }) {
         onClick={onToggle}
       >
         {isExpanded ? 'Ocultar Parcelas' : 'Ver Parcelas'}
-        {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-      </button>
+      {product.installments && product.installments.length > 0 ? (
+        <button 
+          className="installments-btn" 
+          onClick={onToggle}
+        >
+          {isExpanded ? 'Ocultar Parcelas' : 'Ver Parcelas'}
+          {isExpanded ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+        </button>
+      ) : (
+        <div style={{ marginTop: '1rem', padding: '0.75rem', background: 'rgba(16, 185, 129, 0.15)', border: '1px solid #10b981', borderRadius: 'var(--radius-sm)', textAlign: 'center', color: '#10b981', fontWeight: 'bold' }}>
+          Pagamento na Entrega
+        </div>
+      )}
 
-      {isExpanded && (
+      {isExpanded && product.installments && product.installments.length > 0 && (
         <div className="installments-table-container">
           <table className="installments-table">
             <thead>

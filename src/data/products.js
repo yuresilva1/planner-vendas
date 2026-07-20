@@ -2,6 +2,7 @@ export const products = [
   {
     id: 1,
     title: "1 FRASCO",
+    category: "Mounjarim",
     price: "197,00",
     link: "https://ev.braip.com/ref?pl=pla1qrk8&ck=chew4mj1&af=afi28607gx",
     installments: [
@@ -22,6 +23,7 @@ export const products = [
   {
     id: 3,
     title: "3 MESES",
+    category: "Mounjarim",
     price: "297,00",
     link: "https://ev.braip.com/ref?pl=plarzq9w&ck=chew4mj1&af=afi28607gx",
     installments: [
@@ -42,6 +44,7 @@ export const products = [
   {
     id: 5,
     title: "5 MESES",
+    category: "Mounjarim",
     price: "397,00",
     link: "https://ev.braip.com/ref?pl=plaooq9j&ck=chew4mj1&af=afi28607gx",
     installments: [
@@ -62,6 +65,7 @@ export const products = [
   {
     id: 10,
     title: "10 MESES",
+    category: "Mounjarim",
     price: "697,00",
     link: "https://ev.braip.com/ref?pl=plak8rl2&ck=chew4mj1&af=afi28607gx",
     installments: [
@@ -82,6 +86,7 @@ export const products = [
   {
     id: 101,
     title: "1 MÊS RMK",
+    category: "Mounjarim",
     price: "157,00",
     link: "https://ev.braip.com/ref?pl=pla81gzo&ck=chew4mj1&af=afi28607gx",
     installments: [
@@ -102,6 +107,7 @@ export const products = [
   {
     id: 105,
     title: "5 MESES RMK",
+    category: "Mounjarim",
     price: "327,00",
     link: "https://ev.braip.com/ref?pl=plaj9go2&ck=chew4mj1&af=afi28607gx",
     installments: [
@@ -122,6 +128,7 @@ export const products = [
   {
     id: 110,
     title: "10 MESES RMK",
+    category: "Mounjarim",
     price: "547,00",
     link: "https://ev.braip.com/ref?pl=plaqo6ex&ck=chew4mj1&af=afi28607gx",
     installments: [
@@ -142,6 +149,7 @@ export const products = [
   {
     id: 103,
     title: "3 MESES RMK",
+    category: "Mounjarim",
     price: "249,00",
     link: "https://ev.braip.com/ref?pl=plawolg1&ck=chew4mj1&af=afi28607gx",
     installments: [
@@ -159,4 +167,28 @@ export const products = [
       { parcelas: "12x", valor: "R$ 25,75", total: "R$ 309,00" },
     ],
   },
+  {
+    id: 202,
+    title: "TRATAMENTO 2 MESES",
+    category: "MonjaPro (Pagamento na Entrega)",
+    price: "197,90",
+    link: "https://entrega.logzz.com.br/pay/memd7v0z4/tejxn-1-unidade-1-de-brinde",
+    installments: []
+  },
+  {
+    id: 204,
+    title: "TRATAMENTO 4 MESES",
+    category: "MonjaPro (Pagamento na Entrega)",
+    price: "297,90",
+    link: "https://entrega.logzz.com.br/pay/memd7v0z4/xckyr-tratamento-3-meses--promocao",
+    installments: []
+  },
+  {
+    id: 207,
+    title: "TRATAMENTO 7 MESES",
+    category: "MonjaPro (Pagamento na Entrega)",
+    price: "397,00",
+    link: "https://entrega.logzz.com.br/pay/memd7v0z4/ufmgt-5-unidades",
+    installments: []
+  }
 ];
