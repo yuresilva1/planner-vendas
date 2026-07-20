@@ -11,7 +11,7 @@ export default function ProductCard({ product, isExpanded, onToggle, onCopy }) {
     <div className="glass-panel product-card">
       <div className="product-header">
         <div>
-          <span className="product-title">Moujarim {product.title}</span>
+          <span className="product-title">{product.title}</span>
           <div className="product-price">R$ {product.price}</div>
         </div>
         <DollarSign className="text-accent" size={24} color="#10b981" />
@@ -25,11 +25,7 @@ export default function ProductCard({ product, isExpanded, onToggle, onCopy }) {
         </button>
       </div>
 
-      <button 
-        className="installments-btn" 
-        onClick={onToggle}
-      >
-        {isExpanded ? 'Ocultar Parcelas' : 'Ver Parcelas'}
+
       {product.installments && product.installments.length > 0 ? (
         <button 
           className="installments-btn" 
